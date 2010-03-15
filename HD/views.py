@@ -243,18 +243,38 @@ def create_repository(request, repo):
                 return errorHandle("Unknown status of this repository",None)
 
 def waiting(request, repo):
-    out_str=""
-    err_str=""
+    out_str=[]
+    err_str=[]
+    errors=0
+    warnings=0
+    done=False
     try:
         out=open(LOGS+tmp.shortname+"-ProjectCreation.log","w")
-        out_str=out.read()
+        tmp=out.readlines()
     except:
-        out_str="Cannot open Log"
+        tmp=[]
+        tmp.append("ERROR: Cannot open Log")
+        done=True
+
+    for line in tmp:
+        if line.find("ERROR")==0:
+            errors+=1
+            line='<font color="red"><b>'+line+'</b></font>'
+        elif line.find("WARNING")==0:
+            warnings+=1
+            line='<font color="brown"><b>'+line+'</b></font>'
+        elif line.find("SUCCESS: project"):
+            line='<font color="green"><b>'+line+'</b></font>'
+            done=True
+        out_str.append(line)
 
     try:
         err=open(LOGS+tmp.shortname+"-ProjectCreationErrors.log","w")
-        err_str=out.read()
+        err_str=out.readlines()
     except:
         err_str="Cannot open Error Log"
 
-    return render_to_response('create_repository.html', {'out_str': out_str, "err_str":err_str})
+    if not done:
+        return render_to_response('create_repository.html', {'out_str': out_str, 'err_str':err_str, 'warnings':warnings, 'errors':errors})
+    else:
+        return render_to_response('create_repository.html', {'out_str': out_str, 'err_str':err_str, 'warnings':warnings, 'errors':errors, 'done':done})

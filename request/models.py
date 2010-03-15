@@ -71,7 +71,7 @@ class ProjectForm(ModelForm):
         model=ProjectCreation
 
     def ValidateShortname(self):
-        if re.search("^[a-zA-Z0-9]+$",self.cleaned_data['shortname']):
+        if re.search("^[a-zA-Z0-9-]+$",self.cleaned_data['shortname']):
             return True
         else:
             return False
