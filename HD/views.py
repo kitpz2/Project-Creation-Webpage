@@ -27,10 +27,9 @@ from string import replace
 import re
 from django.core.mail import send_mail, EmailMessage
 from django.core import exceptions
-from os import system, popen
-
-LOCATION="/afs/cern.ch/project/svn/usertest/reps/"
-CreateHD="/afs/cern.ch/user/p/pzembrzu/create_project/scripts"
+from subprocess import Popen
+from django.conf import settings
+from globals import SVNMAIN, LOGS, LOCATION, CreateHD
 
 no_ldap=0
 try:
@@ -192,19 +191,18 @@ def create_repository(request, repo):
 
             #executing script:
             command2 ="cd "+ CreateHD + "; ./create-projectHD.sh " + form.cleaned_data['shortname'] +' \''+ form.cleaned_data['longname'] +'\' \''+ form.cleaned_data['respuser'] +'\' \''+ form.cleaned_data['respemail'] +'\' \''+ form.cleaned_data['libuser'] +'\' \''+ tmp.userwrite +'\' \''+ tmp.password +'\' \''+ form.cleaned_data['restrictionlevel'] +'\' \''+ tmp.useradmin +'\' \''+ tmp.userread +'\' \''+ pers +'\' \''+ str(realQuota)+'\''
-
+            out=open(LOGS+tmp.shortname+"-ProjectCreation.log","w")
+            err=open(LOGS+tmp.shortname+"-ProjectCreationErrors.log","w")
             try:
-                #retrycode=popen("/afs/cern.ch/project/svn/dist/web/admin/run \""+command2+"\"")
-                pass
+                if settings.DEBUG:
+                    pass
+                else:
+                    Popen("/afs/cern.ch/project/svn/dist/web/admin/run \""+command2+"\"", stdout=out, stderr=err)
             except OSError, e:
                 error="Execution failed: "+ e
                 return errorHandle(error)
 
-            return errorHandle(command2+" :\n"+command2,None)
-
-            #return HttpResponseRedirect("/status/")
-
-
+            return HttpResponseRedirect("/HD/"+tmp.shortname+"/waiting/")
 
         else:
             return errorHandle("Form is not Valid", form)
@@ -244,4 +242,19 @@ def create_repository(request, repo):
             else:
                 return errorHandle("Unknown status of this repository",None)
 
+def waiting(request, repo):
+    out_str=""
+    err_str=""
+    try:
+        out=open(LOGS+tmp.shortname+"-ProjectCreation.log","w")
+        out_str=out.read()
+    except:
+        out_str="Cannot open Log"
 
+    try:
+        err=open(LOGS+tmp.shortname+"-ProjectCreationErrors.log","w")
+        err_str=out.read()
+    except:
+        err_str="Cannot open Error Log"
+
+    return render_to_response('create_repository.html', {'out_str': out_str, "err_str":err_str})

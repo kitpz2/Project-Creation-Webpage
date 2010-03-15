@@ -36,15 +36,15 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
      (r'^request/$','svnweb.request.views.index'),
-     (r'^status/$','svnweb.request.views.status'),
-     (r'^request/(?P<repo>[a-zA-Z0-9]+)/create_librarian/$','svnweb.request.views.create_librarian'),
-     (r'^request/(?P<repo>[a-zA-Z0-9]+)/create_account/$','svnweb.request.views.create_librarian'),
-     (r'^request/(?P<repo>[a-zA-Z0-9]+)/check_account/$','svnweb.request.views.check_all_data'),
-     (r'^request/(?P<repo>[a-zA-Z0-9]+)/create_repository/$','svnweb.request.views.create_repository'),
+     (r'^status/$','svnweb.status.views.status'),
+     (r'^HD/(?P<repo>[a-zA-Z0-9-]+)/create_librarian/$','svnweb.HD.views.create_librarian'),
+     (r'^HD/(?P<repo>[a-zA-Z0-9-]+)/create_account/$','svnweb.HD.views.create_librarian'),
+     (r'^HD/(?P<repo>[a-zA-Z0-9-]+)/check_account/$','svnweb.HD.views.check_all_data'),
+     (r'^HD/(?P<repo>[a-zA-Z0-9-]+)/create_repository/$','svnweb.HD.views.create_repository'),
+     (r'^HD/(?P<repo>[a-zA-Z0-9-]+)/waiting/$','svnweb.HD.views.waiting'),
 
      #(r'^(
      (r'^admin/', include(admin.site.urls)),
      (r'^request/css/(?P<path>.*)$', 'django.views.static.serve',{'document_root': 'request/css/'}),
      (r'^request/media/(?P<path>.*)$', 'django.views.static.serve',{'document_root': 'request/media/'}),
-
 )
