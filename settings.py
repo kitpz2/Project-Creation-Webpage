@@ -12,7 +12,7 @@ MANAGERS = ADMINS
 DATABASE_ENGINE = 'oracle'  #"postgresql_psycopg2', "postgresql', 'mysql', 'sqlite3' or 'oracle'.
 DATABASE_NAME = 'devdb10'             # Or path to database file if using sqlite3.
 DATABASE_USER = 'vcsystem'             # Not used with sqlite3.
-DATABASE_PASSWORD = ''         # Not used with sqlite3.
+DATABASE_PASSWORD = '33change'         # Not used with sqlite3.
 DATABASE_HOST = ''#oradev10.cern.ch'             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''#10520'             # Set to empty string for default. Not used with sqlite3.
 
