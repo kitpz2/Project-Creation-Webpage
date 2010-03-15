@@ -20,6 +20,55 @@
 #       along with this program; if not, write to the Free Software
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
+from svnweb.request.models import ProjectForm, Project, ProjectCreation, ProjectMainForm
+from django.http import HttpResponse, Http404
+from django.shortcuts import render_to_response, HttpResponseRedirect
+from string import replace
+import re
+from django.core.mail import send_mail, EmailMessage
+from django.core import exceptions
+from os import system, popen
+
+LOCATION="/afs/cern.ch/project/svn/usertest/reps/"
+CreateHD="/afs/cern.ch/user/p/pzembrzu/create_project/scripts"
+
+no_ldap=0
+try:
+    import ldap
+except :
+    no_ldap=1
+
+def check_user_data(user):
+    if no_ldap==0:
+        l=ldap.open("ldap.cern.ch")
+        baseDN="o=cern,c=ch"
+        searchScope = ldap.SCOPE_SUBTREE
+        retrieveAttributes = ['mail','displayName',]
+        searchFilter = "UID="+user
+        person=0
+        try:
+            ldap_result_id = l.search(baseDN, searchScope, searchFilter, retrieveAttributes)
+            exist=0
+            while 1:
+                result_type, result_data = l.result(ldap_result_id, 0)
+                if (result_data == []):
+                    break
+                else:
+                    ## here you don't have to append to a list
+                    ## you could do whatever you want with the individual entry
+                    ## The appending to list is just for illustration.
+                    if result_type == ldap.RES_SEARCH_ENTRY:
+                        exist=exist+1
+                        person=result_data
+            if exist==1:
+                return person
+            else:
+                return False
+        except ldap.LDAPError, e:
+            print e
+    else:
+        return False
+
 
 def check_all_data(request, repo):
     def errorHandle(error, form):
@@ -31,40 +80,21 @@ def check_all_data(request, repo):
 
     if request.method == 'POST':
 
-    #try:
-        tmp = ProjectCreation.objects.get(shortname=repo)
-        form = ProjectForm(data = request.POST, instance = tmp)
-    #except:
-        #raise Http404
+        try:
+            tmp = ProjectCreation.objects.get(shortname=repo)
+            form = ProjectForm(data = request.POST, instance = tmp)
+        except:
+            raise Http404
+
         if form.is_valid():
-            '''tmp.longname=request.POST['longname']
-            tmp.shortname=request.POST['shortname']
-            tmp.requestorafs=request.POST['requestorafs']
-            tmp.libuser=request.POST['libuser']
-            tmp.useradmin=request.POST['useradmin']
-            tmp.userwrite=request.POST['userwrite']
-            tmp.userread=request.POST['userread']
-            tmp.quota=request.POST['quota']
-            if request.POST.getlist('personal'):
-                tmp.personal=request.POST['personal']
-            else:
-                tmp.personal=False
-
-            tmp.restrictionlevel=request.POST['restrictionlevel']
-
-            if request.POST.getlist('use_existing_account'):
-                tmp.use_existing_account=True
-            else:
-                tmp.use_existing_account=False'''
-
             if form.cleaned_data['use_existing_account']==True:#if user uses existing librarian
                 form.cleaned_data['status']='requested_repository'#we don't need to create another one so we push project to 'create_repository'
                 form.save()
-                return HttpResponseRedirect("/request/"+tmp.shortname+"/create_repository/")
+                return HttpResponseRedirect("/HD/"+tmp.shortname+"/create_repository/")
             else:
                 form.cleaned_data['status']='requested_account'#if not we must first create a librarian account in 'create_librarian'
                 form.save()
-                return HttpResponseRedirect("/request/"+tmp.shortname+"/create_librarian/")
+                return HttpResponseRedirect("/HD/"+tmp.shortname+"/create_librarian/")
         else:
             errorHandle("Form is not valid",form)
     else:
@@ -74,7 +104,6 @@ def check_all_data(request, repo):
             raise Http404
 
         form=ProjectForm(instance=tmp)
-        #return errorHandle("OK!",{'form':form})
         if tmp.status=="requested":
             return render_to_response('check_all_data.html', {'form':form})
         elif tmp.status=="requested_repository":
@@ -163,16 +192,15 @@ def create_repository(request, repo):
 
             #executing script:
             command2 ="cd "+ CreateHD + "; ./create-projectHD.sh " + form.cleaned_data['shortname'] +' \''+ form.cleaned_data['longname'] +'\' \''+ form.cleaned_data['respuser'] +'\' \''+ form.cleaned_data['respemail'] +'\' \''+ form.cleaned_data['libuser'] +'\' \''+ tmp.userwrite +'\' \''+ tmp.password +'\' \''+ form.cleaned_data['restrictionlevel'] +'\' \''+ tmp.useradmin +'\' \''+ tmp.userread +'\' \''+ pers +'\' \''+ str(realQuota)+'\''
-            #return errorHandle(command2,None)
 
             try:
-                retrycode=popen("/afs/cern.ch/project/svn/dist/web/admin/run \""+command2+"\"")
-
+                #retrycode=popen("/afs/cern.ch/project/svn/dist/web/admin/run \""+command2+"\"")
+                pass
             except OSError, e:
                 error="Execution failed: "+ e
                 return errorHandle(error)
 
-            return errorHandle(command2+" :\n"+retrycode.readlines(),None)
+            return errorHandle(command2+" :\n"+command2,None)
 
             #return HttpResponseRedirect("/status/")
 
@@ -202,6 +230,9 @@ def create_repository(request, repo):
                 'status':tmp.status,
 
                 })
+            for field in form:
+                field.field.widget.attrs['readonly']=None
+
             return render_to_response('create_repository.html', {'form': form})
         else:
             if tmp.status=="requested_account":
