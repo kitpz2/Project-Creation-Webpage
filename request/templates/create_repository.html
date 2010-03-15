@@ -21,7 +21,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en-us" xml:lang="en-us" >
     <head>
-        <title>Creating repository</title>
+        {% if errors %}<title>Creating repository - {{errors}} errors, {{warnings}} warnings</title>
+        {% else %}<title>Creating repository</title>{% endif %}
         <link rel="STYLESHEET" type="text/css" href="/request/css/styles.css">
         <style type="text/css">
             id_status {display: none; }
@@ -45,7 +46,7 @@
         <h1 align="center">SVN Service at CERN</h1>
         <h2 align="center">creating repository</h2>
         {% if error %}<p><strong><font color="red"><center>{{ error }}</center></font></strong></p>
-        <a href="/status/">Status page</a>{% endif %}
+        <a href="/status/">Back to Status page</a>{% endif %}
         {% if form %}
         <form action="." method="post">
             <table>
@@ -69,7 +70,18 @@
         </form>
         {% endif %}
         {% if out_str %}
-        <h4>{{out_str|safe}}</h4>
+        {% if done %}
+        {% ifequal error 0 %}
+        <center><font color="green"><h2>Project Created!</h2></font><br/><a href="/status/">Back to Status page</a></center>
+        {% else %}
+        <center><font color="red"><h2>There was {{errors}} errors in Project Creation.</h2>
+        <br/>Project wasn't created. Check output below</font><br/><a href="/status/">Back to Status page</a></center>
+        {% endifequal %}
+        {% endif %}
+        {% for line in out_str %}
+        <h4>{{line|safe}}</h4>
+        {% endfor %}
+
         <h3><font color="red">{{err_str|safe}}</font></h3>
         {% endif %}
                 <hr width="100%" size="1">
