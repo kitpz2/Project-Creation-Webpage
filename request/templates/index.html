@@ -1,0 +1,114 @@
+<!--
+        index.html
+        
+        Copyright 2010 Paweł Zembrzuski <pawel.zembrzuski@cern.ch>
+        
+        This program is free software; you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation; either version 2 of the License, or
+        (at your option) any later version.
+        
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+        
+        You should have received a copy of the GNU General Public License
+        along with this program; if not, write to the Free Software
+        Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+        MA 02110-1301, USA.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-us" xml:lang="en-us" >
+	<head>
+		<title>Repository request</title>
+		<link rel="STYLESHEET" type="text/css" href="/request/css/styles.css">
+		<style type="text/css">
+			id_status {display: none; }
+			tr.id_Status {display:none;}
+			tr.id_Password{display:none;}
+		</style>
+	</head>
+	<body>
+		<table cellpadding="0" cellspacing="0" border="0" width="100%">
+			<tr valign="middle">
+				<td bgcolor="#003366"><a href="http://www.cern.ch"><img
+				src="/request/media/CERNHeadE.gif" alt="CERN" width="354" height="20"
+				##border="0"></a></td>
+				<td bgcolor="#003366" align="right" style="font-family: Arial; font-weight: bold; color: #FFFFFF">
+				<a href="http://cern.ch/it/" id="toplink">IT</a>&nbsp;&nbsp;-&nbsp;&nbsp;
+				<a href="http://cern.ch/IT-DES/" id="toplink">IT-DES</a>&nbsp;&nbsp;-&nbsp;&nbsp;
+				<a href="http://cern.ch/svn/" id="toplink">Central SVN Service</a>&nbsp;
+				</td>
+			</tr>
+		</table>
+		<br>
+		<h1 align="center">SVN Service at CERN</h1>
+		<h2 align="center">Requesting a new SVN repository</h2>
+		<P>Please make sure you fill up all fields in this form. Click on Submit once finished.<br>N.B. Make also sure that there is NOT an already <a href="http://svn.web.cern.ch/svn/howto.php#repositorylist">existing</a> SVN Project which could hosts your code.</P>
+		{% if error %}<p><strong><font color="red"><center>{{ error }}</center></font></strong></p>{% endif %}
+		
+		<form action="." method="post">
+			<table>
+				{% for field in form %}
+							{% ifnotequal field.label "Use existing account" %}
+								<tr class="id_{{field.label}}">
+									<td align="right">{{ field.help_text }}<br />
+									{%ifequal field.label "Shortname"%}
+									<small>(small letters,no spaces - ex: <i>lhcmon</i>)</small>
+									{%endifequal%}
+									{%ifequal field.label "Requestorafs"%}
+									<small>(no service account, the person has to be at CERN)</small>
+									{%endifequal%}
+									{%ifequal field.label "Libuser"%}
+									<small>(This has to be a Service account, no personal account!)</small>
+									{%endifequal%}
+									{%ifequal field.label "Useradmin" %}
+									<small>(space-separated list of AFS account names - ex. slopiens johns)</small>
+									{%endifequal%}
+									{%ifequal field.label "Userwrite" %}
+									<small>(space-separated list of AFS account names - ex. slopiens johns)</small>
+									{%endifequal%}
+									{%ifequal field.label "Useradd" %}
+									<small>(space-separated list of AFS account names - ex. slopiens johns)</small>
+									{%endifequal%}
+									{%ifequal field.label "Quota"%}
+									<small>(grows as your project grows (specify in [MB]. <br />If you are loading a large chunk, request quota! - ex: <i>1000</i>)</small>
+									{%endifequal%}
+									{%ifequal field.label "Longname"%}
+									<small>(ex: <i>LHC Monitoring Project</i>)</small>
+									{%endifequal%}
+									{%ifequal field.label "Personal"%}
+									i.e. no librarian account needed<br /><small>your AFS account will be used as librarian account</small>
+									{%endifequal%}
+									{%ifequal field.label "Restrictionlevel"%}
+									<small>(you can also change it later and custimize per path)</small>
+									{%endifequal%}
+									</td>
+									<td align="left">{{field}}</td>
+								</tr>
+								<tr colspan=2>
+									<td><center><font color='red'>{{ field.errors }}</font></center></td>
+								</tr>
+							{% endifnotequal %}
+				{% endfor %}
+				<tr valign="top">
+					<td align="right">I <b>will not</b> add or commit into Subversion (SVN) any files <br>containing passwords or confidential information<br><a href="http://cern.ch/SecureSoftware/secrets.html">CERN Computer Security</a></td>
+					<td><input type="checkbox" id="condition" name="condition" value="yes">I AGREE</td>
+				</tr>
+				<tr>
+					<td align="center" colspan="2">
+					<input type="submit" name="request" value="Submit">&nbsp;&nbsp;&nbsp;
+					</td>
+				</tr>
+			</table>
+		</form>
+
+		<hr width="100%" size="1">
+		<small>
+			SVN Service at CERN: <a href="http://cern.ch/svn">CERN Central SVN
+			Service</a>.<br />
+			Send all feedback to <a href="mailto:SVN.Support@cern.ch">SVN.Support@cern.ch</a>
+		</small>
+	</body>
+</html>

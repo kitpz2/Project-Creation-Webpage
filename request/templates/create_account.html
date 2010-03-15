@@ -1,0 +1,70 @@
+<!--
+        create_account.html
+        
+        Copyright 2010 Paweł Zembrzuski <pawel.zembrzuski@cern.ch>
+        
+        This program is free software; you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation; either version 2 of the License, or
+        (at your option) any later version.
+        
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+        
+        You should have received a copy of the GNU General Public License
+        along with this program; if not, write to the Free Software
+        Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+        MA 02110-1301, USA.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-us" xml:lang="en-us" >
+	<head>
+		<title>Creating account</title>
+		<link rel="STYLESHEET" type="text/css" href="/request/css/styles.css">
+	</head>
+	<body>
+		<table cellpadding="0" cellspacing="0" border="0" width="100%">
+		<tr valign="middle">
+			<td bgcolor="#003366"><a href="http://www.cern.ch"><img src="/request/media/CERNHeadE.gif" alt="CERN" width="354" height="20" border="0"></a></td>
+			<td bgcolor="#003366" align="right" style="font-family: Arial; font-weight: bold; color: #FFFFFF">
+				<a href="http://it-div.web.cern.ch/it-div/" id="toplink">IT</a>&nbsp;&nbsp;-&nbsp;&nbsp;
+				<a href="http://it-des.web.cern.ch/IT-DES/" id="toplink">IT-DES</a>&nbsp;&nbsp;-&nbsp;&nbsp;
+				<a href="http://svn.web.cern.ch/svn/" id="toplink">Central SVN Service</a>&nbsp;
+			</td>
+		</tr></table>
+		
+		<br>
+		<h1 align="center">SVN Service at CERN</h1>
+		<h2 align="center">creating repository</h2>
+		{% if error %}<p><strong><font color="red"><center>{{ error }}</center></font></strong></p>
+		<a href="/status/">Status page</a>{% endif %}	
+		<form action="." method="post">
+			<table>
+				<tr>
+					<td>Librarian account:</td><td><input name=login value={{login}} /></td>
+				</tr>
+				<tr>
+					<td>Librarian password:</td><td><input name=password /></td>
+				</tr>
+				<tr>
+					<td align="center" colspan="2">
+					<input type="submit" name="request" value="Submit">&nbsp;&nbsp;&nbsp;
+					</td>
+				</tr>
+			</table>
+			
+		</form>
+		<hr width="100%" size="1">
+		<small>
+			SVN Service at CERN: <a href="http://cern.ch/svn">CERN Central SVN
+			Service</a>.<br />
+			Send all feedback to <a href="mailto:SVN.Support@cern.ch">SVN.Support@cern.ch</a>
+		</small>
+		
+		
+	</body>
+</html>
+	
+	

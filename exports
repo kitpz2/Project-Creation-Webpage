@@ -1,0 +1,3 @@
+export ORACLE_HOME=/ORA/dbs01/oracle/product/rdbms/
+export LD_LIBRARY_PATH=/ORA/dbs01/oracle/product/rdbms/lib/ 
+export TNS_ADMIN=/afs/cern.ch/project/oracle/admin

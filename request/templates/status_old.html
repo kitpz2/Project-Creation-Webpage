@@ -1,0 +1,146 @@
+<!--
+        status_old.html
+        
+        Copyright 2010 Paweł Zembrzuski <pawel.zembrzuski@cern.ch>
+        
+        This program is free software; you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation; either version 2 of the License, or
+        (at your option) any later version.
+        
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+        
+        You should have received a copy of the GNU General Public License
+        along with this program; if not, write to the Free Software
+        Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+        MA 02110-1301, USA.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="https://www.w3.org/1999/xhtml">
+	<head>
+		<title>
+			IT - CERN Central SVN Service - SVN Status Board
+		</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252"/>
+		<meta name="CERN-Scope" content="IT-Dep"/>
+		<meta http-equiv=refresh content=60 /> 
+		<link rel="stylesheet" type="text/css" href="/request/css/status.css"/>
+	</head>
+	<body>
+		<table cellspacing="0" cellpadding="0" width="780" border="0">
+			<tbody>
+				<tr>
+					<td>
+						<a href="https://www.cern.ch"><img class="menuTextSiteImage"
+						src="https://cern.ch/computing-images/cern-it-department.gif"
+						alt="CERN Logo" width="250" height="56"/></a>
+					
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<table cellspacing="0" cellpadding="0" width="780" border="0">
+			<tbody>
+				<tr>
+					<td>
+						&nbsp;
+					</td>
+					<td>
+						<span class="menutextsitestructure"><span
+							class="menuTextSiteStructure"><a href="http://cern.ch/it/">IT
+							Home</a></span></span> <span
+							class="menuTextSiteStructure">&gt; <a
+							href="http://it-div.web.cern.ch/it-div/techcomputing/default.asp">Technical
+							Computing </a></span> <span
+							class="menuTextSiteStructure">&gt; <a
+							href="http://svn.web.cern.ch/svn/">CERN Central SVN Service </a>
+						</span>
+						
+						<span class="menuTextSiteStructure">&gt; <a href=".">SVN
+							Status</a>
+						</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+<h1 class="title1Green">Status over requested projects</h1>
+<P>This page keep track of all CERN Cental SVN service projects not yet fully created</P>
+<h3 class="title1Green">Requested</h3>
+{%if list_account%}
+		<table>		
+			{%for item in list_repository %}
+				<tr>
+					<td><a href="/request/{{item.shortname}}/create_repository/">{{item.shortname}}</a></td>
+					<td>{{item.longname}}</td>
+				</tr>
+			{%endfor%}
+		</table>
+		{%else%}
+		<P>No projects requested</P>
+		{%endif%}
+<h3 class="title1Green">Awaiting Librarian Account</h3>
+
+<P>No projects await an librarian account to be created</P>
+<h3 class="title1Green">Ready to be created (librarian account exist)</h3>
+{%if list_repository%}
+		<table>		
+			{%for item in list_repository %}
+				<tr>
+					<td><a href="/request/{{item.shortname}}/create_repository/">{{item.shortname}}</a></td>
+					<td>{{item.longname}}</td>
+				</tr>
+			{%endfor%}
+		</table>
+		{%else%}
+		<P>No projects have a librarian account yet.</P>
+		{%endif%}
+<br>
+<table border="0" cellspacing="0" cellpadding="0" width="780">
+<tr>
+<td colspan="5">
+<img src="https://cern.ch/computing-images/1pix_green.gif"
+height="12" width="780" alt=""/>
+</td>
+</tr>
+<tr>
+<td>
+<img src="https://cern.ch/computing-images/1ptrans.gif" height="1"
+width="3" alt=""/>
+</td>
+
+<td>
+SVN Support: <a href="mailto:Svn.Support@cern.ch">Svn.Support@cern.ch</a>
+&nbsp; &nbsp; &nbsp;<br/> Author: <a
+href="mailto:hugosson@cern.ch">Hugo hugosson</a>
+</td>
+<td align="right">
+<a
+href="http://www.cern.ch/CERN/Divisions/DSU/Legal/Notices/Copyright.html"
+style="text-decoration: none;">Copyright CERN</a>&nbsp;
+</td>
+<td>
+<img src="https://cern.ch/computing-images/1ptrans.gif" height="1"
+width="3" alt=""/>
+
+</td>
+<td>
+<img
+src="https://cern.ch/computing-images/frontpage_cell_bg_grey.gif"
+height="1" width="1" alt=""/>
+</td>
+</tr>
+<tr>
+<td colspan="5">
+<img src="https://cern.ch/computing-images/1pix_green.gif"
+height="12" width="780" alt=""/>
+</td>
+</tr>
+</table>
+</body>
+</html>
+
+
