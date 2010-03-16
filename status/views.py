@@ -33,7 +33,7 @@ def status(request):
         return render_to_response('status.html', {
                 'error' : error,
         })
-    if not check_premissions('VC-HD-Access'):
+    if not check_premissions(request,'VC-HD-Access'):
         return HttpResponseRedirect("/request/")
     try:
         list_awaiting=ProjectCreation.objects.filter(status='awaiting_account')
