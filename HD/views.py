@@ -76,7 +76,7 @@ def check_all_data(request, repo):
                 'error' : error,
                 'form' : form,
         })
-    if !check_premissions('VC-HD-Access'):
+    if not check_premissions('VC-HD-Access'):
         return HttpResponseRedirect("/request/")
     if request.method == 'POST':
 
@@ -121,7 +121,7 @@ def create_librarian(request, repo):
                 'error' : error,
                 'login' : login,
         })
-    if !check_premissions('VC-HD-Access'):
+    if not check_premissions('VC-HD-Access'):
         return HttpResponseRedirect("/request/")
     if request.method == 'POST':
         try:
@@ -166,7 +166,7 @@ def create_repository(request, repo):
                 'error' : error,
                 'form' : form,
         })
-    if !check_premissions('VC-HD-Access'):
+    if not check_premissions('VC-HD-Access'):
         return HttpResponseRedirect("/request/")
     if request.method == 'POST':
         form = ProjectMainForm(request.POST)
@@ -246,7 +246,7 @@ def create_repository(request, repo):
                 return errorHandle("Unknown status of this repository",None)
 
 def waiting(request, repo):
-    if !check_premissions('VC-HD-Access'):
+    if not check_premissions('VC-HD-Access'):
         return HttpResponseRedirect("/request/")
     out_str=[]
     err_str=[]
