@@ -29,8 +29,8 @@ import re
 from django.core.mail import send_mail, EmailMessage
 from django.core import exceptions
 from os import system
-from globals import admins, helpdesk
-#from django.conf import settings
+from svnweb.globals import admins, helpdesk
+from django.conf import settings
 
 no_ldap=0
 try:
@@ -172,10 +172,10 @@ def index(request):
         try:
             user=request.META['ADFS_LOGIN']
         except:
-            #if settings.DEBUG:
-            #    user=""
-            #else:
-            return errorHandle("Cannot determine your username!",form)
+            if settings.DEBUG:
+                user=""
+            else:
+                return errorHandle("Cannot determine your username!",form)
 
         form = ProjectForm(initial={'requestorafs':user,})
         return render_to_response('index.html', {

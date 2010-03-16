@@ -25,7 +25,7 @@
 from svnweb.request.models import ProjectCreation
 from django.shortcuts import render_to_response
 from django.core import exceptions
-from globals import check_premissions
+from svnweb.globals import check_premissions
 
 
 def status(request):

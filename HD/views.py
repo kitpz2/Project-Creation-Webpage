@@ -28,8 +28,8 @@ import re
 from django.core.mail import send_mail, EmailMessage
 from django.core import exceptions
 from subprocess import Popen
-#from django.conf import settings
-from globals import SVNMAIN, LOGS, LOCATION, CreateHD
+from django.conf import settings
+from svnweb.globals import SVNMAIN, LOGS, LOCATION, CreateHD
 
 no_ldap=0
 try:
@@ -197,10 +197,10 @@ def create_repository(request, repo):
             out=open(LOGS+tmp.shortname+"-ProjectCreation.log","w")
             err=open(LOGS+tmp.shortname+"-ProjectCreationErrors.log","w")
             try:
-                #if settings.DEBUG:
-                #    pass
-                #else:
-                Popen("/afs/cern.ch/project/svn/dist/web/admin/run \""+command2+"\"", stdout=out, stderr=err)
+                if settings.DEBUG:
+                    pass
+                else:
+                    Popen("/afs/cern.ch/project/svn/dist/web/admin/run \""+command2+"\"", stdout=out, stderr=err)
             except OSError, e:
                 error="Execution failed: "+ e
                 return errorHandle(error)
