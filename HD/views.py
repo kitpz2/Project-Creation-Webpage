@@ -28,7 +28,7 @@ import re
 from django.core.mail import send_mail, EmailMessage
 from django.core import exceptions
 from subprocess import Popen
-from django.conf import settings
+#from django.conf import settings
 from globals import SVNMAIN, LOGS, LOCATION, CreateHD
 
 no_ldap=0
@@ -76,7 +76,8 @@ def check_all_data(request, repo):
                 'error' : error,
                 'form' : form,
         })
-
+    if !check_premissions('VC-HD-Access'):
+        return HttpResponseRedirect("/request/")
     if request.method == 'POST':
 
         try:
@@ -120,7 +121,8 @@ def create_librarian(request, repo):
                 'error' : error,
                 'login' : login,
         })
-
+    if !check_premissions('VC-HD-Access'):
+        return HttpResponseRedirect("/request/")
     if request.method == 'POST':
         try:
             tmp = ProjectCreation.objects.get(shortname=repo)
@@ -164,7 +166,8 @@ def create_repository(request, repo):
                 'error' : error,
                 'form' : form,
         })
-
+    if !check_premissions('VC-HD-Access'):
+        return HttpResponseRedirect("/request/")
     if request.method == 'POST':
         form = ProjectMainForm(request.POST)
         if form.is_valid():
@@ -194,10 +197,10 @@ def create_repository(request, repo):
             out=open(LOGS+tmp.shortname+"-ProjectCreation.log","w")
             err=open(LOGS+tmp.shortname+"-ProjectCreationErrors.log","w")
             try:
-                if settings.DEBUG:
-                    pass
-                else:
-                    Popen("/afs/cern.ch/project/svn/dist/web/admin/run \""+command2+"\"", stdout=out, stderr=err)
+                #if settings.DEBUG:
+                #    pass
+                #else:
+                Popen("/afs/cern.ch/project/svn/dist/web/admin/run \""+command2+"\"", stdout=out, stderr=err)
             except OSError, e:
                 error="Execution failed: "+ e
                 return errorHandle(error)
@@ -243,6 +246,8 @@ def create_repository(request, repo):
                 return errorHandle("Unknown status of this repository",None)
 
 def waiting(request, repo):
+    if !check_premissions('VC-HD-Access'):
+        return HttpResponseRedirect("/request/")
     out_str=[]
     err_str=[]
     errors=0

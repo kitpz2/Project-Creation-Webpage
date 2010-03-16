@@ -28,7 +28,9 @@ from string import replace
 import re
 from django.core.mail import send_mail, EmailMessage
 from django.core import exceptions
-from os import system, popen
+from os import system
+from globals import admins, helpdesk
+#from django.conf import settings
 
 no_ldap=0
 try:
@@ -36,13 +38,8 @@ try:
 except :
     no_ldap=1
 
-admins="pzembrzu@cern.ch"
-helpdesk="pzembrzu@cern.ch"
-#helpdesk="helpdesk@cern.ch"
-
 def check_user(user):
     if no_ldap==0:
-        #l=ldap.open("ldap.cern.ch")
         l=ldap.open("ldap.cern.ch")
         baseDN="o=cern,c=ch"
         searchScope = ldap.SCOPE_SUBTREE
@@ -171,6 +168,16 @@ def index(request):
             return errorHandle("Form is not Valid", form)
     else:
         form = ProjectForm()
+        user=""
+        try:
+            user=request.META['ADFS_LOGIN']
+        except:
+            #if settings.DEBUG:
+            #    user=""
+            #else:
+            return errorHandle("Cannot determine your username!",form)
+
+        form = ProjectForm(initial={'requestorafs':user,})
         return render_to_response('index.html', {
             'form': form,
         })

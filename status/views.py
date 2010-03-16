@@ -25,7 +25,7 @@
 from svnweb.request.models import ProjectCreation
 from django.shortcuts import render_to_response
 from django.core import exceptions
-
+from globals import check_premissions
 
 
 def status(request):
@@ -33,7 +33,8 @@ def status(request):
         return render_to_response('status.html', {
                 'error' : error,
         })
-
+    if !check_premissions('VC-HD-Access'):
+        return HttpResponseRedirect("/request/")
     try:
         list_awaiting=ProjectCreation.objects.filter(status='awaiting_account')
         cmd=""

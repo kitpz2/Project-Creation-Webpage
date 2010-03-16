@@ -28,3 +28,13 @@ CreateHD=SVNMAIN+"scripts/repo/createHD.sh"
 admins="pzembrzu@cern.ch"
 helpdesk="pzembrzu@cern.ch"
 #helpdesk="helpdesk@cern.ch"
+
+def check_premissions(who):
+    groups=request.META['ADFS_GROUP'].split(';')
+    for group in groups:
+        if group == who:
+            access=True
+    if access==False:
+        return False
+    else:
+        return True
