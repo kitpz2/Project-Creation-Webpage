@@ -1,0 +1,117 @@
+
+SHELL        = /bin/sh
+PYTHON       = $(shell which python)
+#
+rpmtopdir    = $(PWD)/build/rpm
+rpmbuild     = $(shell [ -x /usr/bin/rpmbuild ] && echo rpmbuild || echo rpm)
+#
+PKG_SPECFILE = $(shell find -maxdepth 1 -type f -name *.spec )
+PKG_SPECFILE_IN = $(PKG_SPECFILE)
+PKG_NAME     = $(shell awk '$$1 == "Name:"     { print $$2 }' $(PKG_SPECFILE_IN) )
+PKG_VERSION  = $(shell awk '$$1 == "Version:"  { print $$2 }' $(PKG_SPECFILE_IN) )
+PKG_RELEASE  = $(shell awk '$$1 == "Release:"  { print $$2 }' $(PKG_SPECFILE_IN) )
+PKG_LICENCE  = $(shell awk '$$1 == "Licenese:" { print $$2 }' $(PKG_SPECFILE_IN) )
+PKG_TARNAME  = $(PKG_NAME)-$(PKG_VERSION).src.tar.gz
+
+#
+optdir   = $(prefix)/opt
+
+#
+lm4math   = $(prefix)$(lm4math_short)
+initd	= $(prefix)$(initd_short)
+# could be changed to anything more adecuate
+
+all: rpm
+
+# Build SRPMS and RPM files for this project
+#   - in order to satisfy the build needs of the Etics project the root of the build directory
+#     is taken as ./build/rpm by default which overrides any .rpmmacro options
+#
+rpm: dist
+	# rpm
+	@echo Building RPM in directory $(rpmtopdir)
+
+	# create the rpmbuild directories
+	@for i in BUILD RPMS SOURCES SPECS SRPMS; do \
+		mkdir -p $(rpmtopdir)/$$i; \
+	done
+
+
+	@cp -f     $(PKG_TARNAME)  $(rpmtopdir)/SOURCES/
+	@cp -f     $(PKG_SPECFILE) $(rpmtopdir)/SPECS/
+	@rm -f     $(PKG_TARNAME)
+
+	@$(rpmbuild) --define '_topdir    $(rpmtopdir)'     \
+		--define '_specdir   $(rpmtopdir)/SPECS/'   \
+		--define '_sourcedir $(rpmtopdir)/SOURCES/' \
+		--define '_srcrpmdir $(rpmtopdir)/SRPMS/'   \
+		--define '_rpmdir    $(rpmtopdir)/RPMS/'    \
+		--define '_buildroot $(rpmtopdir)/BUILD/'   \
+		--define '_tmppath   $(rpmtopdir)/BUILD/'   \
+		-ba $(rpmtopdir)/SPECS/$(PKG_SPECFILE)
+	# done
+
+dist: clean 
+	# Dist ...
+	@echo Building $(PKG_NAME) source distribution
+
+	@mkdir -p  $(PKG_NAME)-$(PKG_VERSION)/build/
+	@cp -R opt/ `find -maxdepth 1 -type f` $(PKG_NAME)-$(PKG_VERSION)
+
+	
+	@tar -zcf  $(PKG_TARNAME) $(PKG_NAME)-$(PKG_VERSION)
+	@rm -rf    $(PKG_NAME)-$(PKG_VERSION)
+
+	@echo Distribution tarball ./$(PKG_TARNAME) created
+	# done
+
+clean:
+	# Cleaning ...
+	@rm -rf   $(PKG_TARNAME)
+	@rm -rf   $(PKG_NAME)-$(PKG_VERSION)
+	@rm -rf   $(rpmtopdir)
+	@rm -f    `find . -name '*~'`
+	@rm -f    `find . -name '#*'`
+	@rm -f    `find . -name '*.tmp'`
+	@rm -f    `find . -name 'core.*'`
+
+	@echo `find . -type f -name \* -or -name \*.cin |  sort -u`
+	
+	# remove auto generated files
+	#@for i in `find . -type f -name \*.in -or -name \*.cin | sed -e s/.in$$// | sort -u` ; do \
+	#		rm -f $$i; \
+	#done
+	# done
+
+install: clean 
+	# Installing ...
+	@echo Installing $(PKG_NAME) to directory: $(prefix)
+
+	# The script(s) called to execute lm4math
+	#
+	
+	#@for i in `find ./bin/ -maxdepth 1 -type f -name lm* | sed -e "s/^\.\///"`; do \
+	#	mkdir -p $(bindir)/; \
+	#	install -m 755 $$i $(bindir); \
+	#done
+
+	mkdir -p $(optdir)/;
+
+	tar cjvf opt.tar.bz2 ./opt/
+        cp opt.tar.bz2 $(prefix)	
+
+	#@mkdir -p $(docdir)/$(PKG_NAME)
+	#@cp    -f LICENSE MAINTAINER ChangeLog $(docdir)/$(PKG_NAME)
+
+	#@for i in `find ./doc/ -type f -name *.html -or -name *.css | sed -e "s/^\.\/doc\///"`; do \
+	#	install -m 755 ./doc/$$i $(docdir)/$(PKG_NAME)/; \
+	#done
+
+	
+	@echo Installation complete
+	# done 
+
+upload:
+	# Uploading to AFS
+	cp build/rpm/RPMS/noarch/*.rpm ~/agonzale/rpm
+
