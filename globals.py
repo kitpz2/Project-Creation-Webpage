@@ -27,6 +27,7 @@ LOCATION=SVNMAIN+"reps/"
 CreateHD=SVNMAIN+"scripts/repo/createHD.sh"
 admins="pzembrzu@cern.ch"
 helpdesk="pzembrzu@cern.ch"
+MAGIC_SCRIPT="/afs/cern.ch/project/svn/dist/web/admin/run "
 #helpdesk="helpdesk@cern.ch"
 
 def check_premissions(request,who):

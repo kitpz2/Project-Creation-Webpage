@@ -200,7 +200,7 @@ def create_repository(request, repo):
                 if settings.DEBUG:
                     pass
                 else:
-                    Popen("/afs/cern.ch/project/svn/dist/web/admin/run \""+command2+"\"", stdout=out, stderr=err)
+                    Popen(MAGIC_SCRIPT+"\""+command2+"\"", shell=True, stdout=out, stderr=err)
             except OSError, e:
                 error="Execution failed: "+ e
                 return errorHandle(error)
@@ -271,6 +271,7 @@ def waiting(request, repo):
         elif line.find("SUCCESS: project"):
             line='<font color="green"><b>'+line+'</b></font>'
             done=True
+        out.str.replace('\n','<br />')
         out_str.append(line)
 
     try:
@@ -279,6 +280,7 @@ def waiting(request, repo):
     except:
         err_str="Cannot open Error Log"
 
+    err_str.replace('/n','<br />')
     if not done:
         return render_to_response('create_repository.html', {'out_str': out_str, 'err_str':err_str, 'warnings':warnings, 'errors':errors})
     else:
